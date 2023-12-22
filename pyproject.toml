@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mlops-sentiment-analysis"
 version = "0.1.0"
-description = "Sentiment analysis ML-project to hone MLOps skills."
+description = "la"
 authors = ["Kirill Rubashevskiy <kirill.rubashevskiy@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -9,9 +9,12 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 pandas = "^2.1.4"
+jupyter = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.0"
+dvc = "^3.33.3"
+dvc-s3 = "^2.23.0"
 
 [tool.black]
 line-length = 90
