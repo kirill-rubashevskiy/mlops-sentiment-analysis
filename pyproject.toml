@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mlops-sentiment-analysis"
 version = "0.1.0"
-description = "la"
+description = "TBA"
 authors = ["Kirill Rubashevskiy <kirill.rubashevskiy@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -21,7 +21,7 @@ dvc-s3 = "^2.23.0"
 
 [tool.black]
 line-length = 90
-target-version = ["py311"]
+target-version = ["py310"]
 
 [tool.isort]
 src_paths = ["sentiment-analysis"]
