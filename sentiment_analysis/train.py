@@ -1,37 +1,70 @@
 import logging
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from utils import load_data, save_model
+import hydra
+import mlflow
+import numpy as np
+from omegaconf import OmegaConf
+from sklearn.model_selection import cross_validate
+from utils import build_model, load_data, save_model
 
 
-def main():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+@hydra.main(config_path="../conf", config_name="config", version_base=None)
+def main(cfg: OmegaConf):
 
-    # load train data
-    data = load_data("data.csv")
-    logging.info("Train data loaded")
+    mlflow.set_tracking_uri(uri=cfg.mlflow.uri)
 
-    data = data.sample(1000)
+    with mlflow.start_run():
 
-    features = data["review"]
-    labels = data["sentiment"]
+        # load train data
+        data = load_data(
+            cfg.files.train_data,
+            cfg.yandexcloud.access_key_id,
+            cfg.yandexcloud.secret_access_key,
+        )
+        logging.info("Train data loaded")
 
-    # create model pipeline
-    model = Pipeline([("tfidf", TfidfVectorizer()), ("clf", LogisticRegression())])
+        data = data.sample(1000)
 
-    # fit model
-    model.fit(features, labels)
-    logging.info("Model fitted")
+        features = data["review"]
+        labels = data["sentiment"].map({"positive": 1, "negative": 0}).astype(int)
 
-    # save fitted model in ONNX format
-    save_model(model, "pipeline_tfidf_logreg.onnx")
-    logging.info("Model saved")
+        # create model pipeline
+        model = build_model(
+            cfg.preprocessing.name, cfg.preprocessing.params, cfg.clf.name, cfg.clf.params
+        )
+        logging.info("Model pipeline created")
+
+        # log preprocessing and clf params
+        preprocessing_params = {
+            f"preprocessing__{param}": param_value
+            for param, param_value in cfg.preprocessing.params.items()
+        }
+        clf_params = {
+            f"clf__{param}": param_value for param, param_value in cfg.clf.params.items()
+        }
+        mlflow.log_params(preprocessing_params)
+        mlflow.log_params(clf_params)
+        mlflow.log_param(clf_params)
+        logging.info("Params logged")
+
+        # calculate and log train metrics
+        scores = cross_validate(
+            model, features, labels, cv=3, scoring=tuple(cfg.evaluation.metrics)
+        )
+        metrics = {
+            f"train_{metric}": np.mean(scores[f"test_{metric}"])
+            for metric in cfg.evaluation.metrics
+        }
+        mlflow.log_metrics(metrics)
+        logging.info("Metrics logged")
+
+        # fit model
+        model.fit(features, labels)
+        logging.info("Model fitted")
+
+        # save fitted model in ONNX format
+        save_model(model, cfg.files.model, cfg.preprocessing.name)
+        logging.info("Model saved")
 
 
 if __name__ == "__main__":
