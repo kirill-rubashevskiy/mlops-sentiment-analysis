@@ -1,10 +1,12 @@
 clf:
-  name: logreg
+  name: SVM
   params:
-    C: 0.1
+    C: 0.9
+    max_iter: 2000
+    kernel: linear
 
 evaluation:
-  cv: 3
+  cv: 5
   metrics:
     - accuracy
     - precision
@@ -14,7 +16,7 @@ evaluation:
 files:
   test_data: test_data.csv
   train_data: train_data.csv
-  model: pipeline_tfidf_logreg.onnx
+  model: pipeline_tfidf_svm.onnx
 
 mlflow:
   uri: http://127.0.0.1:8080
@@ -22,8 +24,8 @@ mlflow:
 preprocessing:
   name: tfidf
   params:
-    max_features: 1000
-    min_df: 5
+    max_features: 5000
+    min_df: 3
 
 yandexcloud:
   # credentials for project-specific service account with limited rights

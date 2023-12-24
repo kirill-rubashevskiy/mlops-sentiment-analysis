@@ -1,0 +1,5 @@
+outs:
+- md5: 96f6748c432dda2250be556539059061
+  size: 21173884
+  hash: md5
+  path: pipeline_tfidf_svm.onnx

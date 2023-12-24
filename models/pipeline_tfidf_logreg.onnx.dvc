@@ -1,5 +1,0 @@
-outs:
-- md5: baaa38ff39095a9f477fe8c7142bb7ba
-  size: 144093
-  hash: md5
-  path: pipeline_tfidf_logreg.onnx
