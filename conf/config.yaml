@@ -19,7 +19,7 @@ files:
   model: pipeline_tfidf_svm.onnx
 
 mlflow:
-  uri: http://127.0.0.1:8080
+  uri: http://128.0.1.1:8080
 
 preprocessing:
   name: tfidf
