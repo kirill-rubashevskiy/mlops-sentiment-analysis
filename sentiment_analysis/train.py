@@ -1,5 +1,6 @@
 import logging
 
+import git
 import hydra
 import mlflow
 import numpy as np
@@ -42,9 +43,13 @@ def main(cfg: OmegaConf):
         clf_params = {
             f"clf__{param}": param_value for param, param_value in cfg.clf.params.items()
         }
+
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+
         mlflow.log_params(preprocessing_params)
         mlflow.log_params(clf_params)
-        mlflow.log_param(clf_params)
+        mlflow.log_param("git_commit_id", sha)
         logging.info("Params logged")
 
         # calculate and log train metrics
