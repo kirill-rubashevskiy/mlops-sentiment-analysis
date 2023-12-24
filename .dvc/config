@@ -4,3 +4,6 @@
     url = s3://mlops-sentiment-analysis/data
     endpointurl = https://storage.yandexcloud.net/
     region = ru-central1
+    # credentials for project-specific service account with limited rights
+    access_key_id = YCAJEOgFvUrPOU1lo3wn6DIeV
+    secret_access_key = YCMQO-cnIrAoIoUSMGA9YT2DqZAUmzZY6W8GuROv
