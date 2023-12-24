@@ -1,17 +1,18 @@
 import logging
 
+import hydra
+from omegaconf import OmegaConf
 from utils import load_data, load_model, save_predictions
 
 
-def main():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-
+@hydra.main(config_path="../conf", config_name="config", version_base=None)
+def main(cfg: OmegaConf):
     # load test data
-    data = load_data("data.csv")
+    data = load_data(
+        cfg.files.test_data,
+        cfg.yandexcloud.access_key_id,
+        cfg.yandexcloud.secret_access_key,
+    )
     logging.info("Test data loaded")
 
     data = data.sample(1000)
@@ -19,7 +20,9 @@ def main():
     features = data["review"].values.reshape((-1, 1))
     # labels = data["sentiment"]
 
-    model = load_model("pipeline_tfidf_logreg.onnx")
+    model = load_model(
+        cfg.files.model, cfg.yandexcloud.access_key_id, cfg.yandexcloud.secret_access_key
+    )
     logging.info("Model loaded")
 
     inputs = {"input": features}

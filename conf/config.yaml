@@ -28,6 +28,6 @@ preprocessing:
     min_df: 3
 
 yandexcloud:
-  # credentials for project-specific service account with limited rights
+  # credentials for project-specific service account with limited viewer rights
   access_key_id: YCAJEOgFvUrPOU1lo3wn6DIeV
   secret_access_key: YCMQO-cnIrAoIoUSMGA9YT2DqZAUmzZY6W8GuROv
