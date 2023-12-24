@@ -1,0 +1,31 @@
+clf:
+  name: logreg
+  params:
+    C: 0.1
+
+evaluation:
+  cv: 3
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+
+files:
+  test_data: test_data.csv
+  train_data: train_data.csv
+  model: pipeline_tfidf_logreg.onnx
+
+mlflow:
+  uri: http://127.0.0.1:8080
+
+preprocessing:
+  name: tfidf
+  params:
+    max_features: 1000
+    min_df: 5
+
+yandexcloud:
+  # credentials for project-specific service account with limited rights
+  access_key_id: YCAJEOgFvUrPOU1lo3wn6DIeV
+  secret_access_key: YCMQO-cnIrAoIoUSMGA9YT2DqZAUmzZY6W8GuROv
