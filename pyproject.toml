@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mlops-sentiment-analysis"
+name = "mlops_sentiment_analysis"
 version = "0.1.0"
 description = "TBA"
 authors = ["Kirill Rubashevskiy <kirill.rubashevskiy@gmail.com>"]
